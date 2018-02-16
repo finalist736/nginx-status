@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 	"net"
-	"bufio"
-	"io"
+	"regexp"
+	"io/ioutil"
 )
 
 /*
@@ -65,45 +65,27 @@ func getStatus(param string) string {
 
 	defer response.Body.Close()
 
-	return GetParameter(response.Body, param)
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		os.Exit(1)
+	}
+
+	return GetParameterReg(body, param)
 }
 
-func GetParameter(reader io.Reader, param string) string {
-
+func GetParameterReg(data []byte, param string) string {
+	re := regexp.MustCompile(`\d+`)
+	arr := re.FindAllString( string(data), 7)
+	if len(arr) != 7 {
+		return ""
+	}
 	results := make(map[string]string)
-
-	scanner := bufio.NewScanner(reader)
-	scanner.Split(bufio.ScanWords)
-	scanner.Scan()
-	scanner.Scan()
-	scanner.Scan()
-	//fmt.Printf("connections: %s\n", scanner.Text())
-	results["connections"] = scanner.Text()
-	scanner.Scan()
-	scanner.Scan()
-	scanner.Scan()
-	scanner.Scan()
-	scanner.Scan()
-	//fmt.Printf("accepts: %s\n", scanner.Text())
-	results["accepts"] = scanner.Text()
-	scanner.Scan()
-	//fmt.Printf("handled: %s\n", scanner.Text())
-	results["handled"] = scanner.Text()
-	scanner.Scan()
-	//fmt.Printf("requests: %s\n", scanner.Text())
-	results["requests"] = scanner.Text()
-	scanner.Scan()
-	scanner.Scan()
-	//fmt.Printf("reading: %s\n", scanner.Text())
-	results["reading"] = scanner.Text()
-	scanner.Scan()
-	scanner.Scan()
-	//fmt.Printf("writing: %s\n", scanner.Text())
-	results["writing"] = scanner.Text()
-	scanner.Scan()
-	scanner.Scan()
-	//fmt.Printf("waiting: %s\n", scanner.Text())
-	results["waiting"] = scanner.Text()
-
+	results["connections"] = arr[0]
+	results["accepts"] = arr[1]
+	results["handled"] = arr[2]
+	results["requests"] = arr[3]
+	results["reading"] = arr[4]
+	results["writing"] = arr[5]
+	results["waiting"] = arr[6]
 	return results[param]
 }
