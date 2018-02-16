@@ -1,0 +1,9 @@
+#!/bin/sh
+
+PACKAGE="nginx-status"
+PACKPATH="github.com/finalist736/nginx-status"
+echo "building $PACKAGE"
+go build --ldflags "-s" -o ./deb/nginx-status/usr/local/bin/$PACKAGE $PACKPATH
+
+echo "building DEB $PACKAGE"
+fakeroot dpkg-deb -z8 -Zgzip --build ./deb/$PACKAGE

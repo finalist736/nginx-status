@@ -16,5 +16,5 @@
 # GOLAND
 .idea/
 
-# binary
-nginx-status
+#deb file
+*.deb

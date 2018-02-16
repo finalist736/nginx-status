@@ -1,0 +1,11 @@
+Package: nginx-status
+Source: yovoads
+Version: 0.0.1
+Architecture: amd64
+Maintainer: finalist736 YovoAds inc. <finalist@yovoads.com>
+Installed-Size:4143477
+Section: web
+Priority: optional
+Homepage: http://yovoads.com
+Description: nginx server-status parser
+ for zabbix-agent
